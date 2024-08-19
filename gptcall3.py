@@ -1,11 +1,16 @@
-import openai
 from openai import OpenAI
 import os
-import base64
 import json
-from IPython.display import Markdown, display
-import time
 from pydantic import BaseModel
+
+
+# Define the CalendarEvent model
+class SiglelaneFormat(BaseModel):
+    lane_id: str
+    results: list[bool]
+
+class OutputFromat(SiglelaneFormat):
+    all_frames: list[SiglelaneFormat]
 
 os.environ['HTTP_PROXY'] = 'http://10.0.0.15:11452'
 os.environ['HTTPS_PROXY'] = 'http://10.0.0.15:11452'
@@ -27,7 +32,7 @@ def check_in_intersection(search_lane_id):
     print("rule2 called")
     print(search_lane_id)
     intersection = ""
-    with open('/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/mapless/20240808.json', 'r') as file:
+    with open('/home/iix5sgh/workspace/llm/20240808.json', 'r') as file:
         data = json.load(file)
     #print(data)
 
@@ -41,7 +46,7 @@ def check_in_intersection(search_lane_id):
 def check_connection(search_lane_id):
     print("rule3 called")
 
-    with open('/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/mapless/20240808.json', 'r') as file:
+    with open('/home/iix5sgh/workspace/llm/20240808.json', 'r') as file:
         data = json.load(file)
 
     connection = ""
@@ -55,7 +60,7 @@ def check_connection(search_lane_id):
 def traffic_elements(timestap):
     print("rule4 called")
 
-    with open('/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/mapless/20240808.json', 'r') as file:
+    with open('/home/iix5sgh/workspace/llm/20240808.json', 'r') as file:
         data = json.load(file)
 
     attribute_list = []
@@ -91,6 +96,7 @@ tools=[
             "type": "function",
             "function": {
                 "name": "check_in_intersection",
+                "strict": True,
                 "description": "Check if the given lane is at an intersection, and if so return 0, 1 else. Call this whenever a new lane's ID is given.",
                 "parameters": {
                     "type": "object",
@@ -103,12 +109,14 @@ tools=[
                     "required": ["search_lane_id"],
                     "additionalProperties": False,
                 }
+               
             }
         },
         {
             "type": "function",
             "function": {
                 "name": "check_connection",
+                "strict": True,
                 "description": "Check the lane's ID which is adjcent to the given lane.",
                 "parameters": {
                     "type": "object",
@@ -121,12 +129,14 @@ tools=[
                     "required": ["search_lane_id"],
                     "additionalProperties": False,
                 }
+
             }
         },
         {
             "type": "function",
             "function": {
                 "name": "traffic_elements",
+                "strict": True,
                 "description": "Identify all the traffic elements in front of the vehicle and return a list composed of these traffic elements.",
                 "parameters": {
                     "type": "object",
@@ -139,6 +149,7 @@ tools=[
                     "required": ["timestap"],
                     "additionalProperties": False,
                 }
+
             }
         }
 
@@ -150,28 +161,56 @@ available_tools = {
     "traffic_elements": traffic_elements,
 }
  
-messages = [{"role": "user", "content": f"You are now an expert in lanes and traffic elements topological relationship annotation. When provided with the current driving scene {timestap} and an ID {search_lane_id} for a lane, first assess whether this lane is at an intersection. If the function check_in_intersection returns a value of 0, it signifies that the lane is at an intersection, and no other function is necessary. All the function calling will terminate and the result should be directly reported as a list of [0]. If the function check_in_intersection returns a value of 1, it indicates that the lane is not at an intersection. Next, we need to determine if there is a relationship between the traffic elements in the current scene and the lane. We use the 'traffic_elements' function to obtain a list of all detected traffic elements in the current scene. When the category of the traffic element is 'green traffic light','red traffic light' or 'yellow traffic light', we can consider that this traffic element is related to the road, and we return a value of 1. Any traffic elements that do not fall into these three categories are considered unrelated to the lane, and the output should be 0. Please return a list of topological results indicating whether each traffic element in the provided list is relevant or irrelevant to the lane, for example [0 , 1, 1, 0 ]. After determining the topological relationship between the traffic elements and the lane, necessitate a further examination of the lane ID that are connected to the given lane. For each newly identified lane, continue this process iteratively until all lanes that meet the criteria have been identified.Finally please answer in the following JSON format(note xxx is placeholder, if the information is not available, put 'N/A' instead),including all lanes and the topological relationship results corresponding to each lane.'lane_id':xxx, 'Topols_result':xxx" }]
+messages = [{"role": "user", "content": f"You are now an expert in lanes and traffic \
+            elements topological relationship annotation. When provided with the current \
+            driving scene {timestap} and an ID {search_lane_id} for a lane,first assess \
+            whether this lane is at an intersection. If the function check_in_intersection \
+            returns a value of 0, it signifies that the lane is at an intersection, \
+            and no other function is necessary. All the function calling will terminate \
+            and we should add lane_id and a list of [0] to the result. If the function \
+            check_in_intersection returns a value of 1, it indicates that the lane is not \
+            at an intersection. Next, we need to determine if there is a relationship \
+            between the traffic elements in the current scene and the lane. We use the \
+            'traffic_elements' function to obtain a list of all detected traffic elements \
+            in the current scene. When the category of the traffic element is 'green \
+            traffic light','red traffic light' or 'yellow traffic light', we can consider \
+            that this traffic element is related to the road, and we return a value of 1. \
+            Any traffic elements that do not fall into these three categories are \
+            considered unrelated to the lane, and the output should be 0. Please return \
+            a list of topological results indicating whether each traffic element in the \
+            provided list is relevant or irrelevant to the lane, for \
+            example [0 , 1, 1, 0 ]. After determining the topological relationship between \
+            the traffic elements and the lane, necessitate a further examination of the \
+            lane ID that are connected to the given lane. For each newly identified lane, \
+            continue this process iteratively until all lanes that meet the criteria have \
+            been identified. return the summery of the results for each lane_id in requested format"}]
 
-while True:
-    response = client.chat.completions.create(
-        model="gpt-4o",
+iters=0
+while iters<10 :
+    iters+=1
+    response = client.beta.chat.completions.parse(
+        model="gpt-4o-2024-08-06",
         messages=messages,
         tools=tools,
         tool_choice="auto",
+        response_format=OutputFromat,
     )
 
     response_msg = response.choices[0].message
     messages.append(response_msg)
     print("----------------------")
     print(response_msg.content)
+
     print("----------------------")
 
     #print(response_msg.content) if response_msg.content else print(response_msg.tool_calls)
 
     finish_reason = response.choices[0].finish_reason
     if finish_reason == "stop":
+        print("stopped")
         break
-    
+
+
     tool_calls = response_msg.tool_calls
     if tool_calls:
         for tool_call in tool_calls:
@@ -188,4 +227,7 @@ while True:
                     "content": str(function_response),
                 }
             )
-    
+            
+print("result finalize")
+            
+print(response_msg.parsed)

@@ -1,70 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-import matplotlib.image as mpimg
-import copy
-from shapely.geometry import Polygon
 import os
 import json
-from PIL import Image, ImageDraw
-import logging
-import math
 
 num_img = 0
-
-def is_vertical_line(line):
-    (x1, y1), (x2, y2) = line
-    
-    if x2 == x1:  
-        return True
-    slope = (y2 - y1) / (x2 - x1)
-    
-    angle_with_x = math.degrees(math.atan(abs(slope)))
-    
-    angle_with_y = 90 - angle_with_x
-    
-    return angle_with_y < 45
-    
-def is_vertical_line1(line):
-    (x1, y1), (x2, y2) = line
-    
-    if x2 == x1:  
-        return True
-    slope = (y2 - y1) / (x2 - x1)
-    
-    angle_with_x = math.degrees(math.atan(abs(slope)))
-    
-    angle_with_y = 90 - angle_with_x
-    
-    return angle_with_y < 45
-    
-    
-def angle_with_y_axis(line):   
-    (x1, y1), (x2, y2) = line
-    
-    
-    if x1 == x2:
-        if y2 > y1:
-            return 0  
-        else:
-            return 180  
-    else:
-        if y2 > y1:
-            slope = (y2 - y1) / (x2 - x1)
-            angle_with_x_axis = math.degrees(math.atan(abs(slope)))
-            angle_with_y_axis = 90 - angle_with_x_axis
-        
-        if y2 < y1:
-            slope = (y2 - y1) / (x2 - x1)
-            angle_with_x_axis = math.degrees(math.atan(abs(slope)))
-            angle_with_y_axis = 180 - angle_with_x_axis 
-
-        if y2 == y1:
-            angle_with_y_axis = 90     
-        
-        return angle_with_y_axis < 40
-
-
 
 def interp_arc(points, t=1000):
 
@@ -130,7 +70,7 @@ def _project(points, intrinsic, extrinsic):
 
 
 
-def IMG(jsonname,jsonname_new):####.....json
+def visual_prompt_gen(jsonname,jsonname_new,save_root_path ):####.....json
     print('----------')
     print(jsonname)
     # ?? JSON ??    ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/val/10000/info/xxx-ls.json'
@@ -206,9 +146,8 @@ def IMG(jsonname,jsonname_new):####.....json
         
     num_area = len(data_new["predictions"]['area'])
     colors = [(1, 0, 0), (0, 0, 1), (0, 1, 0)]
-   
-    file = '/DATA_EDS2/wanggl/datasets/BEV_emun_polygon'
-    rootimg = file + '/' + root + '/' 
+
+    rootimg = save_root_path + '/' + root + '/' 
     if not os.path.exists(rootimg):
         os.makedirs(rootimg)
     
@@ -233,27 +172,6 @@ def IMG(jsonname,jsonname_new):####.....json
         cent_point = centerlines[i]
         left_point = leftlines[i]
         right_point = rightlines[i]
-        
-        # cent_y0 = cent_point[0][1]
-        # cent_x0 = cent_point[0][0]
-        # cent_y3 = cent_point[-1][1]
-        # cent_x3 = cent_point[-1][0]
-        # mid_x1 = cent_point[2][0]
-        # mid_y1 = cent_point[2][1]
-        # mid_x2 = cent_point[-3][0]
-        # mid_y2 = cent_point[-3][1]        
-        # ori_xy.append((-1 * cent_y0,cent_x0))
-        # ori_xy.append((-1 * cent_y3,cent_x3))
-        # ori_xy1.append((-1 * cent_y0,cent_x0))
-        # ori_xy1.append((-1 * mid_y1,mid_x1))   ##1
-        # ori_xy2.append((-1 * mid_y2,mid_x2))
-        # ori_xy2.append((-1 * cent_y3,cent_x3)) ###2
-        
-        
-        # sss1 = angle_with_y_axis(ori_xy1)
-        # sss2 = angle_with_y_axis(ori_xy2)         ##???
-        # sssall = angle_with_y_axis(ori_xy) 
-          
         
         lanetrue.append(cent_point)
         lefttrue.append(left_point)
@@ -313,91 +231,29 @@ def IMG(jsonname,jsonname_new):####.....json
         polygon = patches.Polygon(points, closed=True, fill=True, color='green')
         ax.add_patch(polygon)
 
-        name = f'{file}/{root}/{path}-{lane_ids[index]}.png'   ###
+        name = f'{save_root_path}/{root}/{path}-{lane_ids[index]}.png'   ###
         plt.savefig(name, bbox_inches='tight', pad_inches=0, facecolor='black')
         plt.close(fig)
         global num_img
         num_img += 1
-
-    # if os.path.exists(filename):
-    #     os.remove(filename)
-
-    
-    # for lanes in lanetrue:  ##11??
-    #     #lanes = lanes[int(len(centerline) * 0.02):int(len(centerline) * 0.98)]
-        
-    #     centerline_bevx = []
-    #     centerline_bevy = []            
-        
-    #     for point in lanes:
-    #         x, y, z = point
-    #         new_x = 1 * x
-    #         new_y = -1 * y
-    #         centerline_bevx.append(new_y)   ##?????????  90?
-    #         centerline_bevy.append(new_x)
-        
-      
-            
-    #     ax.plot(centerline_bevx, centerline_bevy, color=colors[-1], linewidth=5, zorder=10)
-    #     ax.plot(centerline_bevx[0], centerline_bevy[0], 'o', color=colors[-1], markersize=8, zorder=10)  
-    #     ax.plot(centerline_bevx[-1], centerline_bevy[-1], 'o', color=colors[-1], markersize=8, zorder=10) 
-    
-    # for lanes in lefttrue:  ##11??
-    #     #lanes = lanes[int(len(centerline) * 0.02):int(len(centerline) * 0.98)]
-        
-    #     centerline_bevx = []
-    #     centerline_bevy = []            
-        
-    #     for point in lanes:
-    #         x, y, z = point
-    #         new_x = 1 * x
-    #         new_y = -1 * y
-    #         centerline_bevx.append(new_y)   ##?????????  90?
-    #         centerline_bevy.append(new_x)
-
-            
-        
-    #     ax.plot(centerline_bevx, centerline_bevy, color=colors[1], linewidth=2.5, zorder=10)
-    #     ax.plot(centerline_bevx[0], centerline_bevy[0], 'o', color=colors[1], markersize=8, zorder=10)  
-    #     ax.plot(centerline_bevx[-1], centerline_bevy[-1], 'o', color=colors[1], markersize=8, zorder=10)        
-
-    # for lanes in righttrue:  ##11??
-    #     #lanes = lanes[int(len(centerline) * 0.02):int(len(centerline) * 0.98)]
-        
-    #     centerline_bevx = []
-    #     centerline_bevy = []            
-        
-    #     for point in lanes:
-    #         x, y, z = point
-    #         new_x = 1 * x
-    #         new_y = -1 * y
-    #         centerline_bevx.append(new_y)   ##?????????  90?
-    #         centerline_bevy.append(new_x)
-
-  
-    #     ax.plot(centerline_bevx, centerline_bevy, color=colors[1], linewidth=2.5, zorder=10)
-    #     ax.plot(centerline_bevx[0], centerline_bevy[0], 'o', color=colors[1], markersize=8, zorder=10)  
-    #     ax.plot(centerline_bevx[-1], centerline_bevy[-1], 'o', color=colors[1], markersize=8, zorder=10)            
-
         
 
 def main():
     
-    rootpath = '/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/val/'
-    # rootpath_new = '/DATA_EDS2/wanggl/datasets/pkl2json72te/'
-    rootpath_new = '/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/mapless/pkl2json_mini_batch/'
-
+    gt_path = '/fs/scratch/Sgh_CR_RIX/rix3_shared/dataset-public/OpenLane-V2/raw/val/'
+    pred_path = '/home/iix5sgh/workspace/llm/pkl2json_mini_batch/'
+    save_root_path = '/home/iix5sgh/workspace/llm/vqa_lr_0909'
     for i in range(10000,10150):
-        rootpath2 = rootpath + str(i).zfill(5) + '/' + 'info'   ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/train/10000/info'
-        rootpath_new2 = rootpath_new + str(i).zfill(5) + '/' + 'info'
-        for b in os.listdir(rootpath_new2):      
-            rootpath3 = rootpath2 + '/' + b 
-            rootpath_new3 = rootpath_new2 + '/' + b   
-            namepart = rootpath3.split("-")
+        gt_path_info = gt_path + str(i).zfill(5) + '/' + 'info'   ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/train/10000/info'
+        pred_path_info = pred_path + str(i).zfill(5) + '/' + 'info'
+        for frame in os.listdir(pred_path_info):      
+            gt_path_frame = gt_path_info + '/' + frame 
+            pred_path_frame = pred_path_info + '/' + frame   
+            namepart = gt_path_frame.split("-")
             if namepart[-1] == "ls.json":
-                IMG(rootpath3,rootpath_new3)      
-        print(f'The {i} epoch done')
-    print("Done!")
+                visual_prompt_gen(gt_path_frame,pred_path_frame, save_root_path)      
+        print(f'The scene: {i} done')
+    print("All Scenes Done!")
     print(num_img)
     
 

@@ -89,16 +89,7 @@ def visual_prompt_gen(jsonname,jsonname_new,save_root_path ):####.....json
     centerlines = []      ### [0,10]
     leftlines = []
     rightlines = []
-    lefttypes = []
-    righttypes = []
     for i in range(len(data_new["predictions"]['lane_segment'])):
-    # for i in range(len(data["annotation"]['lane_segment'])):
-        # lane_id = data["annotation"]['lane_segment'][i]['id']
-        # centerline = data["annotation"]['lane_segment'][i]['centerline']
-        # leftline = data["annotation"]['lane_segment'][i]['left_laneline']
-        # rightline = data["annotation"]['lane_segment'][i]['right_laneline']
-        # lefttype = data["annotation"]['lane_segment'][i]['left_laneline_type']
-        # righttype = data["annotation"]['lane_segment'][i]['right_laneline_type']
         lane_id = data_new["predictions"]['lane_segment'][i]['id']
         centerline = data_new["predictions"]['lane_segment'][i]['centerline']
         leftline = data_new["predictions"]['lane_segment'][i]['left_laneline']
@@ -118,11 +109,8 @@ def visual_prompt_gen(jsonname,jsonname_new,save_root_path ):####.....json
         LT = data_new["predictions"]['traffic_element']    ###?????
 
     num = len(centerlines)  # ????
-    num_lt = len(LT) if "traffic_element" in data_new["predictions"] else 0  # ??????
-    
+        
     image = data['sensor']['ring_front_center']['image_path']   
-    imagename = imgname + image ##????
-
     
     k_points = []
     attribute = []
@@ -145,7 +133,7 @@ def visual_prompt_gen(jsonname,jsonname_new,save_root_path ):####.....json
         area_cates.append(area_cate)
         
     num_area = len(data_new["predictions"]['area'])
-    colors = [(1, 0, 0), (0, 0, 1), (0, 1, 0)]
+    colors = [(0.2, 0.2, 0.2),(1, 0, 0), (0, 0, 1), (0, 1, 0)]
 
     rootimg = save_root_path + '/' + root + '/' 
     if not os.path.exists(rootimg):
@@ -155,20 +143,12 @@ def visual_prompt_gen(jsonname,jsonname_new,save_root_path ):####.....json
     lanetrue = []
     lefttrue = []
     righttrue = []
-    lanetrue1 = []
-    lefttrue1 = []
-    righttrue1 = []
+    
     print('num:',num)
     q = 0
     for i in range(num):     
         points = _project(interp_arc(centerlines[i]), intrinsic, extrinsic)
-        x_y = []
-        new_xy = []
-        ori_xy = []
-        ori_xy1 = []
-        ori_xy2 = []
-        sss = False
-        
+          
         cent_point = centerlines[i]
         left_point = leftlines[i]
         right_point = rightlines[i]
@@ -182,7 +162,7 @@ def visual_prompt_gen(jsonname,jsonname_new,save_root_path ):####.....json
         ##BEV
         fig, ax = plt.subplots(figsize=(10, 20))
         ax.set_axis_off()  # ???????
-        fig.patch.set_facecolor('black')
+        fig.patch.set_facecolor('white')
     
         for lanes in leftlines:  ##11??
             #lanes = lanes[int(len(centerline) * 0.02):int(len(centerline) * 0.98)]
@@ -232,7 +212,7 @@ def visual_prompt_gen(jsonname,jsonname_new,save_root_path ):####.....json
         ax.add_patch(polygon)
 
         name = f'{save_root_path}/{root}/{path}-{lane_ids[index]}.png'   ###
-        plt.savefig(name, bbox_inches='tight', pad_inches=0, facecolor='black')
+        plt.savefig(name, bbox_inches='tight', pad_inches=0, facecolor='white')
         plt.close(fig)
         global num_img
         num_img += 1
@@ -242,7 +222,7 @@ def main():
     
     gt_path = '/fs/scratch/Sgh_CR_RIX/rix3_shared/dataset-public/OpenLane-V2/raw/val/'
     pred_path = '/home/iix5sgh/workspace/llm/pkl2json_mini_batch/'
-    save_root_path = '/home/iix5sgh/workspace/llm/vqa_inter_0914'
+    save_root_path = '/home/iix5sgh/workspace/llm/vqa_inter_0914_w'
     for i in range(10000,10150):
         gt_path_info = gt_path + str(i).zfill(5) + '/' + 'info'   ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/train/10000/info'
         pred_path_info = pred_path + str(i).zfill(5) + '/' + 'info'

@@ -318,7 +318,8 @@ def draw_and_save_images_based_on_matrix(num_lanes, relationships_matrix, lane_i
         # image = image.convert('RGBA')
         image_width, image_height = image.size
         draw = ImageDraw.Draw(image)
-        if points is not None:        
+        plot_polygon = False
+        if points is not None and plot_polygon:        
             p2 =  points.tolist()      
             line_color = (0, 255, 0)  # ????? (R, G, B)
             line_color_lr = (255, 0, 0)
@@ -483,7 +484,7 @@ def visual_prompt_gen(jsonname,jsonname_new,save_path_root):####.....json
 def main():
     gt_path = '/fs/scratch/Sgh_CR_RIX/rix3_shared/dataset-public/OpenLane-V2/raw/val/'
     pred_path = '/home/iix5sgh/workspace/llm/pkl2json_mini_batch/'
-    save_root_path = '/home/iix5sgh/workspace/llm/vqa_inter_pv_0914'
+    save_root_path = '/home/iix5sgh/workspace/llm/vqa_inter_pv_0914_img_only'
     
     for i in range(10000,10150):
         gt_path_info = gt_path + str(i).zfill(5) + '/' + 'info'   ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/train/10000/info'

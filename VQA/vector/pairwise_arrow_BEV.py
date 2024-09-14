@@ -131,17 +131,17 @@ def _project(points, intrinsic, extrinsic):
 
 
 
-def IMG(jsonname,jsonname_new, id_dict):####.....json
+def IMG(gt_json_name,pred_json_name, id_dict,save_path_root):####.....json
     print('----------')
-    print(jsonname)
+    print(gt_json_name)
     # ?? JSON ??    ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/val/10000/info/xxx-ls.json'
-    root,pathname,imgname = jsonname.split('/')[-3],jsonname.split('/')[-1],jsonname.split('val')[0]  ##???10000?json???  /DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/
+    root,pathname,imgname = gt_json_name.split('/')[-3],gt_json_name.split('/')[-1],gt_json_name.split('val')[0]  ##???10000?json???  /DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/
     path = pathname.split('.')[0]   
 
-    with open(jsonname) as f:
+    with open(gt_json_name) as f:
         data = json.load(f)
         
-    with open(jsonname_new) as f:
+    with open(pred_json_name) as f:
         data_new = json.load(f)
     
     # ??????? 
@@ -201,17 +201,11 @@ def IMG(jsonname,jsonname_new, id_dict):####.....json
     num_area = len(data_new["predictions"]['area'])
     colors = [(1, 0, 0), (0, 0, 1), (0, 1, 0)]
    
-    file = '/DATA_EDS2/wanggl/datasets/BEV_pairwise_polygon_arrow3'
-    rootimg = file + '/' + root + '/' 
+   
+    rootimg = save_path_root + '/' + root + '/' 
     if not os.path.exists(rootimg):
         os.makedirs(rootimg)
     
-    
-    aaaaa = []
-    bbbbb = []
-    areakey = []
-    diffkey = []
-    AREA = False
     min_x = 99999
     max_x = 99999
     mid_x = 99999
@@ -408,15 +402,6 @@ def IMG(jsonname,jsonname_new, id_dict):####.....json
                     new_y = -1 * y
                     points2.append((new_y, new_x))
 
-                # lane_x2 = []
-                # lane_y2 = []
-                # for point in cent2:
-                #     x, y, z = point
-                #     new_x = 1 * x
-                #     new_y = -1 * y
-                #     lane_x2.append(new_y)
-                #     lane_y2.append(new_x)
-
                 mid_point2 = []
                 mid_idx = len(cent2) // 2
                 x, y, z = cent2[mid_idx]
@@ -433,19 +418,6 @@ def IMG(jsonname,jsonname_new, id_dict):####.....json
                 fig_width, fig_height = fig.get_size_inches()
                 delta_x = 0.2 * fig_width
                 delta_y = 0.3 * fig_height
-
-                # arrow_ori = (mid_point1[0][0] + delta_x, mid_point1[0][1] + delta_y)
-                # arrow_end1 = (cent_point1[1][0] + delta_x, cent_point1[1][1] + delta_y)
-                # arrow_end2 = (mid_point2[0][0] + delta_x, mid_point2[0][1] + delta_y)
-
-                # # 绘制第一个箭头
-                # arrow1 = mpatches.FancyArrowPatch(arrow_ori, arrow_end1, arrowstyle='->', mutation_scale=50, lw=6, color='white')
-                # ax.add_patch(arrow1)
-
-                # # 绘制第二个箭头
-                # arrow2 = mpatches.FancyArrowPatch(arrow_ori, arrow_end2, arrowstyle='->', mutation_scale=50, lw=6, color='magenta')
-                # ax.add_patch(arrow2)
-
 
                 # 原始向量
                 vector1 = np.array((cent_point1[1][0] - mid_point1[0][0], cent_point1[1][1] - mid_point1[0][1]))
@@ -486,7 +458,7 @@ def IMG(jsonname,jsonname_new, id_dict):####.....json
                 ax.add_patch(arrow2)
 
 
-                name = f'{file}/{root}/{path}-{index1}-{index2}.png'   ###
+                name = f'{save_path_root}/{root}/{path}-{index1}-{index2}.png'   ###
                 plt.savefig(name, bbox_inches='tight', pad_inches=0, facecolor='black')
                 plt.close(fig)
                 global num_img
@@ -497,21 +469,22 @@ def IMG(jsonname,jsonname_new, id_dict):####.....json
 
 def main():
     id_dict = {}
-    rootpath = '/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/val/'
-    # rootpath_new = '/DATA_EDS2/wanggl/datasets/pkl2json72te/'
-    rootpath_new = '/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/mapless/pkl2json_mini_batch/'
+    
+    gt_path = '/fs/scratch/Sgh_CR_RIX/rix3_shared/dataset-public/OpenLane-V2/raw/val/'
+    pred_path = '/home/iix5sgh/workspace/llm/pkl2json_mini_batch/'    
+    save_path_root = '/home/iix5sgh/workspace/llm/vqa_vec_0914'
 
     for i in range(10000,10150):
         id_dict[str(i)] = {}
-        rootpath2 = rootpath + str(i).zfill(5) + '/' + 'info'   ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/train/10000/info'
-        rootpath_new2 = rootpath_new + str(i).zfill(5) + '/' + 'info'
-        for b in os.listdir(rootpath_new2):      
-            rootpath3 = rootpath2 + '/' + b 
-            rootpath_new3 = rootpath_new2 + '/' + b
+        gt_info_path = gt_path + str(i).zfill(5) + '/' + 'info'   ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/train/10000/info'
+        pred_info_path = pred_path + str(i).zfill(5) + '/' + 'info'
+        for b in os.listdir(pred_info_path):      
+            gt_path_frame = gt_info_path + '/' + b 
+            pred_path_frame = pred_info_path + '/' + b
             id_dict[str(i)][b.split('.')[0]] = {}
-            namepart = rootpath3.split("-")
+            namepart = gt_path_frame.split("-")
             if namepart[-1] == "ls.json":
-                id_dict = IMG(rootpath3,rootpath_new3, id_dict)      
+                id_dict = IMG(gt_path_frame,pred_path_frame, id_dict,save_path_root)      
         print(f'The {i} epoch done')
     print("Done!")
     print(num_img)

@@ -1,9 +1,9 @@
 from PIL import Image
 import os
 
-work_path1 = '/home/iix5sgh/workspace/llm/vqa_inter_0914'
+work_path1 = '/home/iix5sgh/workspace/llm/vqa_inter_0914_w'
 work_path2 =  '/home/iix5sgh/workspace/llm/vqa_inter_pv_0914'
-save_path = '/home/iix5sgh/workspace/llm/vqa_inter_merged_0914'
+save_path = '/home/iix5sgh/workspace/llm/vqa_inter_merged_0914_w'
 
 
 for scene in os.listdir(work_path1):

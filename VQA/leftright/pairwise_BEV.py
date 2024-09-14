@@ -194,7 +194,7 @@ def visual_prompt_gen(jsonname,jsonname_new,save_path_root):####.....json
         area_cates.append(area_cate)
         
     num_area = len(data_new["predictions"]['area'])
-    colors = [(1, 0, 0), (0, 0, 1), (0, 1, 0)]
+    colors = [(0.2, 0.2, 0.2),(1, 0, 0), (0, 0, 1), (0, 1, 0)]
    
     rootimg = save_path_root + '/' + root + '/' 
     if not os.path.exists(rootimg):
@@ -305,7 +305,7 @@ def visual_prompt_gen(jsonname,jsonname_new,save_path_root):####.....json
                 ##BEV
                 fig, ax = plt.subplots(figsize=(10, 20))
                 ax.set_axis_off()  # ???????
-                fig.patch.set_facecolor('black')
+                fig.patch.set_facecolor('white')
 
             
                 for lanes in leftlines:  ##11??
@@ -420,7 +420,7 @@ def visual_prompt_gen(jsonname,jsonname_new,save_path_root):####.....json
                 # ax.add_patch(arrow)
 
                 name = f'{save_path_root}/{root}/{path}-{index1}-{index2}.png'   ###
-                plt.savefig(name, bbox_inches='tight', pad_inches=0, facecolor='black')
+                plt.savefig(name, bbox_inches='tight', pad_inches=0, facecolor='white')
                 plt.close(fig)
                 global num_img
                 num_img += 1
@@ -430,7 +430,7 @@ def main():
     
     gt_path = '/fs/scratch/Sgh_CR_RIX/rix3_shared/dataset-public/OpenLane-V2/raw/val/'
     pred_path = '/home/iix5sgh/workspace/llm/pkl2json_mini_batch/'
-    save_root_path = '/home/iix5sgh/workspace/llm/vqa_lr_0909'
+    save_root_path = '/home/iix5sgh/workspace/llm/vqa_lr_0914_w'
     for i in range(10000,10150):
         gt_path_info = gt_path + str(i).zfill(5) + '/' + 'info'   ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/train/10000/info'
         pred_path_info = pred_path + str(i).zfill(5) + '/' + 'info'

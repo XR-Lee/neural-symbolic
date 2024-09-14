@@ -242,7 +242,7 @@ def main():
     
     gt_path = '/fs/scratch/Sgh_CR_RIX/rix3_shared/dataset-public/OpenLane-V2/raw/val/'
     pred_path = '/home/iix5sgh/workspace/llm/pkl2json_mini_batch/'
-    save_root_path = '/home/iix5sgh/workspace/llm/vqa_lr_0909'
+    save_root_path = '/home/iix5sgh/workspace/llm/vqa_inter_0914'
     for i in range(10000,10150):
         gt_path_info = gt_path + str(i).zfill(5) + '/' + 'info'   ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/train/10000/info'
         pred_path_info = pred_path + str(i).zfill(5) + '/' + 'info'

@@ -4,8 +4,8 @@
 [**Zongzheng Zhang**](https://vveicao.github.io/)<sup>1,2*</sup> · [**Xinrun Li**](https://github.com/netbeifeng)<sup>2*</sup> · [**Sizhe Zou**](https://1zb.github.io/)<sup>1</sup> · [**Guoxuan Chi**](https://1zb.github.io/)<sup>1</sup> · [**Siqi Li**](https://1zb.github.io/)<sup>1</sup> <br>
 [**Xuchong Qiu**](https://niessnerlab.org/members/matthias_niessner/profile.html)<sup>2</sup> · [**Guoliang Wang**](https://tangjiapeng.github.io/)<sup>1</sup> · [**Guantian Zheng**](https://1zb.github.io/)<sup>1</sup> · [**Leichen Wang**](https://1zb.github.io/)<sup>2</sup> · [**Hang Zhao**](https://1zb.github.io/)<sup>3</sup> and [**Hao Zhao**](https://1zb.github.io/)<sup>1</sup>
 
-<sup>1</sup>Institute for AI Industry Research (AIR), Tsinghua University  · <sup>2</sup>Bosch Corporate Research <br>
-<sup>3</sup>Institute for Interdisciplinary Information Sciences(IIIS), Tsinghua University
+<sup>1</sup>Institute for AI Industry Research (AIR), Tsinghua University · <sup>2</sup>Bosch Corporate Research <br>
+<sup>3</sup>Institute for Interdisciplinary Information Sciences (IIIS), Tsinghua University <br>
 <sub>(* indicates equal contribution)</sub>
 
 **ICRA 2025**

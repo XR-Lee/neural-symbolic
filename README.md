@@ -1,13 +1,14 @@
 <div align="center">
-<h2>🐎Motion2Vecsets: 4D Latent Vector Set Diffusion for Non-rigid Shape Reconstruction and Tracking</h2>
+<h2>🐎Chameleon: Fast-slow Neuro-symbolic Lane Topology Extraction</h2>
 
-[**Wei Cao**](https://vveicao.github.io/)<sup>1*</sup> · [**Chang Luo**](https://github.com/netbeifeng)<sup>1*</sup> · [**Biao Zhang**](https://1zb.github.io/)<sup>2</sup> <br>
-[**Matthias Nießner**](https://niessnerlab.org/members/matthias_niessner/profile.html)<sup>1</sup> · [**Jiapeng Tang**](https://tangjiapeng.github.io/)<sup>1</sup>
+[**Zongzheng Zhang**](https://vveicao.github.io/)<sup>1,2*</sup> · [**Xinrun Li**](https://github.com/netbeifeng)<sup>2*</sup> · [**Sizhe Zou**](https://1zb.github.io/)<sup>1</sup> · [**Guoxuan Chi**](https://1zb.github.io/)<sup>1</sup> · [**Siqi Li**](https://1zb.github.io/)<sup>1</sup> <br>
+[**Xuchong Qiu**](https://niessnerlab.org/members/matthias_niessner/profile.html)<sup>2</sup> · [**Guoliang Wang**](https://tangjiapeng.github.io/)<sup>1</sup> · [**Guantian Zheng**](https://1zb.github.io/)<sup>1</sup> · [**Leichen Wang**](https://1zb.github.io/)<sup>2</sup> · [**Hang Zhao**](https://1zb.github.io/)<sup>3</sup> and [**Hao Zhao**](https://1zb.github.io/)<sup>1</sup>
 
-<sup>1</sup>Technical University of Munich  · <sup>2</sup>King Abdullah University of Science and Technology <br>
+<sup>1</sup>Institute for AI Industry Research (AIR), Tsinghua University  · <sup>2</sup>2Bosch Corporate Research <br>
+<sup>3</sup>Institute for Interdisciplinary Information Sciences(IIIS), Tsinghua University
 <sub>(* indicates equal contribution)</sub>
 
-**CVPR 2024**
+**ICRA 2025**
 
 <a href="https://arxiv.org/abs/2401.06614"><img src='https://img.shields.io/badge/arXiv-M2V-firebrick?logo=arxiv' alt='Arxiv'></a>
 <a href="https://arxiv.org/pdf/2401.06614.pdf"><img src='https://img.shields.io/badge/PDF-M2V-orange?logo=googledocs&logoColor=white' alt='PDF'></a>

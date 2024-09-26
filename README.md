@@ -18,22 +18,11 @@
 
 [\[Arxiv\]](https://arxiv.org/abs/2401.06614) [\[Paper\]](https://arxiv.org/pdf/2401.06614.pdf) [\[Project Page\]](https://vveicao.github.io/projects/Motion2VecSets/) [\[Video\]](https://www.youtube.com/watch?v=VXI3y2o0SqY&ab_channel=MatthiasNiessner) 
 
-![teaser](./img/teaser.jpg)
-We present <b
-              style="background: -webkit-linear-gradient(0deg, rgba(0,70,255,1) 0%, rgba(128,0,255,1) 50%, rgba(122,0,122,1) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Motion2VecSets</b>,
-            a 4D diffusion model for dynamic surface reconstruction from sparse, noisy, or partial <b
-              style="color: rgba(108, 198, 111, 1)">point cloud sequences</b>.
-            Compared to the existing state-of-the-art method <b style="color: rgba(128, 128, 128, 1)">CaDeX</b>, our
-            method can reconstruct more plausible non-rigid object surfaces with complicated structures and achieve more
-            robust motion tracking.
-
-![pipeline](./img/overview.jpg)
 
 <p>
-    Given a sequence of sparse and noisy point clouds as inputs, labeled as <span style="font-weight: bold;">P<sup>t</sup></span> for t from 1 to T, Motion2VecSets outputs a continuous mesh sequence, labeled as <span style="font-weight: bold;">M<sup>t</sup></span> for t from 1 to T. The initial input frame, <span style="font-weight: bold;">P<sup>1</sup></span> (top left), is used as a condition in the <span style="color: #002060; font-weight: bold;">Shape Vector Set Diffusion</span>, which yields denoised shape codes, <span style="font-weight: bold;">S</span>, for reconstructing the geometry of the reference frame, <span style="font-weight: bold;">M<sup>1</sup></span> (top right). Concurrently, the subsequent input frames, <span style="font-weight: bold;">P<sup>t</sup></span> for t from 2 to T (bottom left), are utilized in the <span style="color: #385723; font-weight: bold;">Synchronized Deformation Vector Sets Diffusion</span> to produce denoised deformation codes, <span style="font-weight: bold;">D<sup>t</sup></span> for t from 2 to T, where each latent set, <span style="font-weight: bold;">D<sup>t</sup></span>, encodes the deformation from the reference frame, <span style="font-weight: bold;">M<sup>1</sup></span>, to each subsequent frame, <span style="font-weight: bold;">M<sup>t</sup></span>.
+    Lane topology extraction involves detecting lanes and traffic elements and determining their relationships, a key perception task for mapless autonomous driving. This task requires complex reasoning, such as determining whether it is possible to turn left into a specific lane. To address this challenge, we introduce neuro-symbolic methods powered by visionlanguage foundation models (VLMs). Existing approaches have notable limitations: (1) Dense visual prompting with VLMs can achieve strong performance but is costly in terms of both financial resources and carbon footprint, making it impractical for robotics applications. (2) Neuro-symbolic reasoning methods for 3D scene understanding fail to integrate visual inputs when synthesizing programs, making them ineffective in handling complex corner cases. To this end, we propose a fast-slow neuro-symbolic lane topology extraction algorithm, named Chameleon, which alternates between a fast system that directly reasons over detected instances using synthesized programs and a slow system that utilizes a VLM with a chain-of-thought design to handle corner cases. Chameleon leverages the strengths of both approaches, providing an affordable solution while maintaining high performance. We evaluate the method on the OpenLane-V2 dataset, showing consistent improvements across various baseline detectors.
 </p>
 
-![denoising](./img/denoising.gif)
 
 ## Install
 

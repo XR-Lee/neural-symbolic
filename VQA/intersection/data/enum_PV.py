@@ -318,7 +318,8 @@ def draw_and_save_images_based_on_matrix(num_lanes, relationships_matrix, lane_i
         # image = image.convert('RGBA')
         image_width, image_height = image.size
         draw = ImageDraw.Draw(image)
-        if points is not None:        
+        plot_polygon = False
+        if points is not None and plot_polygon:        
             p2 =  points.tolist()      
             line_color = (0, 255, 0)  # ????? (R, G, B)
             line_color_lr = (255, 0, 0)
@@ -370,7 +371,7 @@ def draw_and_save_images_based_on_matrix(num_lanes, relationships_matrix, lane_i
 
 
 
-def IMG(jsonname,jsonname_new):####.....json
+def visual_prompt_gen(jsonname,jsonname_new,save_path_root):####.....json
     print('----------')
     print(jsonname)
     # ?? JSON ??    ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/val/10000/info/xxx-ls.json'
@@ -455,7 +456,9 @@ def IMG(jsonname,jsonname_new):####.....json
     num_area = len(data["annotation"]['area'])
     
     
-    file0 = f'/DATA_EDS2/wanggl/datasets/Opentest_mini_batch_area_enum2/{root}'   ###### img  
+    file0  = save_path_root + '/' + root
+    
+    # file0 = f'/DATA_EDS2/wanggl/datasets/Opentest_mini_batch_area_enum2/{root}'   ###### img  
     
     if not os.path.exists(file0): 
         os.makedirs(file0)
@@ -479,18 +482,19 @@ def IMG(jsonname,jsonname_new):####.....json
 
 
 def main():
-    rootpath = '/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/val/'
-    rootpath_new = '/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/mapless/pkl2json_mini_batch/'
+    gt_path = '/fs/scratch/Sgh_CR_RIX/rix3_shared/dataset-public/OpenLane-V2/raw/val/'
+    pred_path = '/home/iix5sgh/workspace/llm/pkl2json_mini_batch/'
+    save_root_path = '/home/iix5sgh/workspace/llm/vqa_inter_pv_0914_img_only'
     
     for i in range(10000,10150):
-        rootpath2 = rootpath + str(i).zfill(5) + '/' + 'info'   ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/train/10000/info'
-        rootpath_new2 = rootpath_new + str(i).zfill(5) + '/' + 'info'
-        for b in os.listdir(rootpath_new2):
-            rootpath3 = rootpath2 + '/' + b
-            rootpath_new3 = rootpath_new2 + '/' + b
-            namepart = rootpath3.split("-")
+        gt_path_info = gt_path + str(i).zfill(5) + '/' + 'info'   ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/train/10000/info'
+        pred_path_info = pred_path + str(i).zfill(5) + '/' + 'info'
+        for b in os.listdir(pred_path_info):
+            gt_sub_frame = gt_path_info + '/' + b
+            pred_sub_frame = pred_path_info + '/' + b
+            namepart = gt_sub_frame.split("-")
             if namepart[-1] == "ls.json":
-                info_list = IMG(rootpath3,rootpath_new3)
+                info_list = visual_prompt_gen(gt_sub_frame,pred_sub_frame,save_root_path)
         print(f'The {i} epoch done')
     # with open('complete_infotest719.json', 'w') as f:
     #     json.dump(all_info, f, indent=4)

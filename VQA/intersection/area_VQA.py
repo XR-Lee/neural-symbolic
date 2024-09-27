@@ -4,6 +4,8 @@ import base64
 import json
 from IPython.display import Markdown, display
 import time
+from find_egolane_id import ploygon_filter_ids
+from find_parallel_lanes import search_para_segment
 
 os.environ['HTTP_PROXY'] = 'http://10.0.0.15:11452'
 os.environ['HTTPS_PROXY'] = 'http://10.0.0.15:11452'
@@ -48,13 +50,11 @@ openai.api_key= "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"
 
 # '''
 
-# system_intel = '''
-# The red lines in the photos are lane boundaries. For example, we consider the lane segments in the more left lanes are on the right of those in the more right lanes. We determine their left-right positional relations through lanes instead of the absolute positions of segment patches.
-# '''
 system_intel = '''
-In the provided bird's-eye view (BEV), the red lines in the photos are lane boundaries that are only for references. Color blocks highlighted are different segments of lanes. 
-The colors of the blocks come from green and blue.
+The provided photo is mosaiced with two images, with the bird's-eye view (BEV) on the left and the front perspective view (PV) on the right. In BEV, the red lines represent lane boundaries. 
+Normally, the lane segment is considered as not in the intersection area when it is in front of the area or at rear of the area.
 '''
+
 # Attribute mapping   ???????
 attribute_mapping = {
     0: 'unknown',
@@ -80,8 +80,8 @@ def encode_image(image_path):
 # Function to call GPT-4 API
 def ask_GPT4(prompt, image_base64):
     response = openai.ChatCompletion.create(
-        # model="gpt-4-vision-preview",
-        model='gpt-4o',
+      #   model="gpt-4-vision-preview",
+      model='gpt-4o',
         messages=[
                   {"role": "system", "content": [
                         {"type": "text", "text": system_intel},
@@ -104,130 +104,122 @@ def ask_GPT4(prompt, image_base64):
     )
     return response['choices'][0]['message']['content']
 
-# Read samples from a JSON file
-# with open('/DATA_EDS2/wanggl/datasets/complete_infotest719.json', 'r') as file:
-#     samples = json.load(file)
-
-# work_path = "/DATA_EDS2/wanggl/datasets/BEV_pairwise_polygon2"
-work_path = "/DATA_EDS2/wanggl/datasets/BEV_pairwise_polygon_complete_downsample"
-# result_txt_path = '/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/mapless/ego_para_area_result.txt'
-# scenes = os.listdir(work_path)
-# print(scenes)
-def parse_result(result_txt_path):
+def parse_txt(result_txt_path):
+    ref_set = set()
     with open(result_txt_path, 'r') as f:
         data = f.read()
         data = data.split('\n')
-    scenes = set()
-    result = {}
     for line in data:
         line = line.split(' ')
         scene = line[0]
         timestamp = line[1].split('-')[0]
         lane_id = line[1].split('-')[2]
-        if scene not in scenes:
-            result[scene] = {}
-            timestamps = set()
-        scenes.add(scene)
-        if timestamp not in timestamps:
-            result[scene][timestamp] = []
-        timestamps.add(timestamp)
-        if line[2] == "1":
-            result[scene][timestamp].append(lane_id)
+        ref_set.add((scene, timestamp, lane_id))
+    return ref_set
 
-    return result
+# Read samples from a JSON file
+# with open('/DATA_EDS2/wanggl/datasets/complete_infotest719.json', 'r') as file:
+#     samples = json.load(file)
 
-# result_dict = parse_result(result_txt_path)
+work_path = "/DATA_EDS2/wanggl/datasets/Mosaic_BEV_PV_complete_powerful_downsampling"
+result_txt_path = '/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/mapless/ego_para_area_result_complete_powerful.txt'
+# scenes = os.listdir(work_path)
+# print(scenes)
+# ref_set = parse_txt(result_txt_path)
 
 results = ""
 
 #   # results = {}
 #   # failed_requests = []
 
-for scene in range(10000, 10060):
-    print('------------------------')
-    print(f'Processing scene {scene}...')
-    print('------------------------')
-    scene = str(scene)
-    scene_path = os.path.join(work_path, scene)
-    imgs = os.listdir(scene_path)
-    if len(imgs) == 0:
-        line = scene + '\n'
-        print(line)
-        results += line
-    for img in imgs:
+directory_path = '/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/mapless/pkl2json_results'
+for root, dirs, files in os.walk(directory_path):
+    for file in files:
+        if file.endswith('.json'):
+            file_path = os.path.join(root, file)
 
-# for scene in result_dict:
-#     for timestamp in result_dict[scene]:
-#         if len(result_dict[scene][timestamp]) >= 2:
-#             for index1, idx1 in enumerate(result_dict[scene][timestamp]):
-#                 for index2, idx2 in enumerate(result_dict[scene][timestamp]):
-#                     if index1 < index2:
-        try:
-            img_name = img.split('.png')[0]
-            img_path = os.path.join(scene_path, img)
-            # img_name = timestamp + f'-ls-{idx1}-{idx2}'
-            # img_path = os.path.join(work_path, scene, img_name) + '.png'
-            print('Encoding image...')
-            base64_image = encode_image(img_path)
-            print('Image encoded.')
-            prompt = f'''
-You are an expert in determining positional relationships of lane segments in the image. Is the green segment on the left of the blue segment, or on the right? Please reply in a brief sentence.
-        '''
-#             prompt = f'''
-# In the provided photograph, is the green patch on the left of the blue patch, or on the right?
-#         '''
-        #     prompt = '''
-        #      In the provided photograph, what positional relationship is between the green patch and the blue patch? If the green patch is on the left of the blue patch, answer "1". If the green patch is on the right of the blue patch, answer "2". If you are not sure, answer "0".
-        # '''
-            # Call GPT-4 API
-            print('Calling GPT-4 API...')
-            result = ask_GPT4(prompt, base64_image)
-            print('API call successful.')
-            print(result)
-            if "left" in result and "right" not in result:
-                label = '1'
-            elif "right" in result and "left" not in result:
-                label = '2'
-            else:
-                label = '0'
+        parts = file_path.split('/')
+        scene_id = parts[-3]
+        sample_id = parts[-1]
+        timestamp = sample_id.split('-')[0]
 
-            # if result == "left":
-            #     label = "1"
-            # elif result == "right":
-            #     label = "2"
-            # else:
-            #     label = "0"
-            line = scene + " " + img_name + " " + label + "\n"
-            # line = scene + " " + img_name + " " + result + "\n"
-            print(line)
-            results += line
-            # results[img_name] = result
-        except Exception as e:
-            print(f'Error processing scene {scene}: {e}')
-            # failed_requests.append((scene, str(e)))
-            print('Moving to next sample...')
-            time.sleep(2)  # Optionally add a delay to avoid rate limiting
+        # print(scene_id)
+        # print(timestamp)
 
-with open("ego_para_lr_result.txt", "w") as f:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+        search_lane_id = ploygon_filter_ids(data["predictions"]["lane_segment"])
+        para_lane_ids = []
+        for id in search_lane_id:
+            para_lane_ids.extend(search_para_segment(scene_id, timestamp, str(id)))
+        # print("search_lane_id :", search_lane_id)
+        # print("para_lane_ids :", para_lane_ids)
+        ids = list(set(search_lane_id+para_lane_ids))
+        # print("ids :", ids)
+        for lane_id in ids:
+            # if (scene_id, timestamp, str(lane_id)) not in ref_set:
+# scenes = os.listdir(work_path)
+# scenes.sort()
+# for scene in scenes:
+#     print('------------------------')
+#     print(f'Processing scene {scene}...')
+#     print('------------------------')
+#     scene = str(scene)
+#     scene_path = os.path.join(work_path, scene)
+#     imgs = os.listdir(scene_path)
+#     imgs.sort()
+#     if len(imgs) == 0:
+#         line = scene + '\n'
+#         print(line)
+#         results += line
+#     for img in imgs:
+            try:
+                # img_name = img.split('.jpg')[0]
+                # img_path = os.path.join(scene_path, img)
+                img_name = timestamp + f'-ls-{lane_id}'
+                img_path = os.path.join(work_path, scene_id, img_name) + '.jpg'
+                print('Encoding image...')
+                base64_image = encode_image(img_path)
+                print('Image encoded.')
+                prompt = f'''
+    You are an expert in analyzing lane structure in the image. Let's determine if the the green segment patch is in the intersection area. Please reply in a brief sentence starting with "Yes" or "No".
+            '''
+                # Call GPT-4 API
+                print('Calling GPT-4 API...')
+                result = ask_GPT4(prompt, base64_image)
+                print('API call successful.')
+                print(result)
+                if "Yes" in result :
+                    label = '0'
+                else:
+                    label = '1'
+
+                line = scene_id + " " + img_name + " " + label + "\n"
+                # line = scene + " " + img_name + " " + result + "\n"
+                print(line)
+                results += line
+                # results[img_name] = result
+            except Exception as e:
+                print(f'Error processing scene {scene_id}: {e}')
+                # failed_requests.append((scene, str(e)))
+                print('Moving to next sample...')
+                time.sleep(2)  # Optionally add a delay to avoid rate limiting
+
+with open("ego_para_area_result_complete_powerful.txt", "w") as f:
     f.write(results)
 
 
 # if __name__ == '__main__':
 #     try:
 #         print('Encoding image...')
-#         base64_image = encode_image("/DATA_EDS2/wanggl/datasets/BEV_pairwise_polygon2/10002/315971495049927216-ls-0-1.png")
+#         base64_image = encode_image("/DATA_EDS2/wanggl/datasets/Mosaic_BEV_PV/10000/315969916349927220-ls-0.jpg")
 #         print('Image encoded.')
 # #         prompt = f'''
-# # In the provided photograph, is the green patch on the left of the blue patch, or on the right?
+# # In the provided photograph, is the green patch vertically directly connected with the blue patch ignoring the proper gap?
 # #         '''
-#         # prompt = '''
-#         #      In the provided photograph, what positional relationship is between the green patch and the blue patch? If the green patch is on the left of the blue patch, answer 1. If the green patch is on the right of the blue patch, answer 2. If you are not sure, answer 0.".
-#         # '''
-# #         prompt = f'''
-# # You are an expert in determining positional relationships of lane segments in the image. Let's determine if the green patch is on the left of the blue patch.
-# #         '''
+#       #  Please reply starting with "Yes" or "No"
 #         prompt = f'''
-# You are an expert in determining positional relationships of lane segments in the image. Is the green patch on the left of the blue patch, or on the right?
+# You are an expert in analyzing lane structure in the image. Let's determine if the the green segment patch is in the intersection area. Please reply in a brief sentence starting with "Yes" or "No".
 #         '''
 #         # Call GPT-4 API
 #         print('Calling GPT-4 API...')

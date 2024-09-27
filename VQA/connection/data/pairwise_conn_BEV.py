@@ -1,14 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-import matplotlib.patches as mpatches
-import matplotlib.image as mpimg
-import copy
-from shapely.geometry import Polygon
 import os
 import json
-from PIL import Image, ImageDraw
-import logging
 import math
 
 num_img = 0
@@ -131,7 +125,7 @@ def _project(points, intrinsic, extrinsic):
 
 
 
-def IMG(jsonname,jsonname_new):####.....json
+def visual_prompt_gen(jsonname,jsonname_new,save_path_root):####.....json
     print('----------')
     print(jsonname)
     # ?? JSON ??    ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/val/10000/info/xxx-ls.json'
@@ -200,10 +194,9 @@ def IMG(jsonname,jsonname_new):####.....json
         area_cates.append(area_cate)
         
     num_area = len(data_new["predictions"]['area'])
-    colors = [(1, 0, 0), (0, 0, 1), (0, 1, 0)]
+    colors = [(0.2, 0.2, 0.2),(1, 0, 0), (0, 0, 1), (0, 1, 0)]
    
-    file = '/DATA_EDS2/wanggl/datasets/BEV_pairwise_polygon_arrow'
-    rootimg = file + '/' + root + '/' 
+    rootimg = save_path_root + '/' + root + '/' 
     if not os.path.exists(rootimg):
         os.makedirs(rootimg)
     
@@ -312,7 +305,7 @@ def IMG(jsonname,jsonname_new):####.....json
                 ##BEV
                 fig, ax = plt.subplots(figsize=(10, 20))
                 ax.set_axis_off()  # ???????
-                fig.patch.set_facecolor('black')
+                fig.patch.set_facecolor('white')
 
             
                 for lanes in leftlines:  ##11??
@@ -383,7 +376,7 @@ def IMG(jsonname,jsonname_new):####.....json
 
                 polygon = patches.Polygon(points1, closed=True, fill=True, color=palette[0])
                 ax.add_patch(polygon)
-                ax.plot(lane_x1, lane_y1, color='white', linewidth=5)
+                # ax.plot(lane_x1, lane_y1, color='white', linewidth=5)
                 # arrow = mpatches.FancyArrowPatch(cent_point1[0], cent_point1[1], arrowstyle='->', mutation_scale=40, lw=5, color='white')
                 # ax.add_patch(arrow)
 
@@ -422,12 +415,12 @@ def IMG(jsonname,jsonname_new):####.....json
                 
                 polygon = patches.Polygon(points2, closed=True, fill=True, color=palette[1])
                 ax.add_patch(polygon)
-                ax.plot(lane_x2, lane_y2, color='white', linewidth=5)
+                # ax.plot(lane_x2, lane_y2, color='white', linewidth=5)
                 # arrow = mpatches.FancyArrowPatch(cent_point2[0], cent_point2[1], arrowstyle='->', mutation_scale=40, lw=5, color='white')
                 # ax.add_patch(arrow)
 
-                name = f'{file}/{root}/{path}-{index1}-{index2}.png'   ###
-                plt.savefig(name, bbox_inches='tight', pad_inches=0, facecolor='black')
+                name = f'{save_path_root}/{root}/{path}-{index1}-{index2}.png'   ###
+                plt.savefig(name, bbox_inches='tight', pad_inches=0, facecolor='white')
                 plt.close(fig)
                 global num_img
                 num_img += 1
@@ -435,22 +428,22 @@ def IMG(jsonname,jsonname_new):####.....json
 
 def main():
     
-    rootpath = '/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/val/'
-    # rootpath_new = '/DATA_EDS2/wanggl/datasets/pkl2json72te/'
-    rootpath_new = '/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/mapless/pkl2json_mini_batch/'
-
+    gt_path = '/fs/scratch/Sgh_CR_RIX/rix3_shared/dataset-public/OpenLane-V2/raw/val/'
+    pred_path = '/home/iix5sgh/workspace/llm/pkl2json_mini_batch/'
+    save_root_path = '/home/iix5sgh/workspace/llm/vqa_lr_0914_w'
     for i in range(10000,10150):
-        rootpath2 = rootpath + str(i).zfill(5) + '/' + 'info'   ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/train/10000/info'
-        rootpath_new2 = rootpath_new + str(i).zfill(5) + '/' + 'info'
-        for b in os.listdir(rootpath_new2):      
-            rootpath3 = rootpath2 + '/' + b 
-            rootpath_new3 = rootpath_new2 + '/' + b   
-            namepart = rootpath3.split("-")
+        gt_path_info = gt_path + str(i).zfill(5) + '/' + 'info'   ##'/DATA_EDS2/zhangzz2401/zhangzz2401/OpenLane-V2-master/data/OpenLane-V2/train/10000/info'
+        pred_path_info = pred_path + str(i).zfill(5) + '/' + 'info'
+        for frame in os.listdir(pred_path_info):      
+            gt_path_frame = gt_path_info + '/' + frame 
+            pred_path_frame = pred_path_info + '/' + frame   
+            namepart = gt_path_frame.split("-")
             if namepart[-1] == "ls.json":
-                IMG(rootpath3,rootpath_new3)
-        print(f'The {i} epoch done')
-    print("Done!")
+                visual_prompt_gen(gt_path_frame,pred_path_frame, save_root_path)      
+        print(f'The scene: {i} done')
+    print("All Scenes Done!")
     print(num_img)
+    
     
 
 if __name__ == '__main__':

@@ -33,7 +33,8 @@ Install the environment following `scripts/init_environment.sh`, to install with
 Before the data generation, you can directly get the lane segment and traffic element perception results of TopoMLP from the [Google Drive](https://drive.google.com/file/d/10FUIrxqSPai6eQlqlgIkmBjvtBAyCmJT/view?usp=drive_link). You can download the pickle file and save it in `/dataset`.
 
 You can run the following command to convert the pickle file into timestamp-wise json files:
-```bash
+```python
+# Convert pkl to json
 python tools/pkl2json.py --input $PKL_PATH --output $OUTPUT_PATH --verbose
 
 # For example, you can try this

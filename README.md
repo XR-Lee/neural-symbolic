@@ -33,6 +33,7 @@ Install the environment following `scripts/init_environment.sh`, to install with
 Before the data generation, you can directly get the lane segment and traffic element perception results of TopoMLP from the [Google Drive](https://drive.google.com/file/d/10FUIrxqSPai6eQlqlgIkmBjvtBAyCmJT/view?usp=drive_link). You can download the pickle file and save it in `/dataset`.
 
 You can run the following command to convert the pickle file into timestamp-wise json files:
+
 ```python
 # Convert pkl to json
 python tools/pkl2json.py --input $PKL_PATH --output $OUTPUT_PATH --verbose
@@ -40,6 +41,26 @@ python tools/pkl2json.py --input $PKL_PATH --output $OUTPUT_PATH --verbose
 # For example, you can try this
 python tools/pkl2json.py --input ./dataset/results_base.pkl --output ./dataset/output_json --verbose
 ```
+
+Then you can generate the corresponding visual prompt data for different VQA sub-tasks. And you can find data generation scripts in `/VQA/sub-task/data`. Here, we take the connection VQA task for instance:
+
+```python
+# Generate BEV images for the connection VQA task
+python ./VQA/connection/data/pairwise_conn_BEV.py --output $GENERATION_PATH --verbose
+```
+
+On top of that, you should make your text prompts for the VQA task and save it as a `txt` file. For instance:
+
+```python
+system_context = '''
+The red lines in the photos are lane boundaries. Two segments in different lanes don't have any connection relationship. Only two segments in the same lane end to end adjacent are considered as directly connected.
+'''
+prompt = '''
+You are an expert in determining adjacent lane segments in the image. Let's determine if the the green segment is directly connected with the blue segmemt. Please reply in a brief sentence starting with "Yes" or "No".
+'''
+```
+
+So far, you get done all preparations for an VQA task.
 
 ## Testing and evaluation
 

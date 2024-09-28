@@ -158,4 +158,5 @@ if __name__ == '__main__':
         output_json_path = f'{args.output}/{scene}/info/{timestamp}-ls.json'
         pkl2json(data_results, output_json_path)
         sum += 1
-        print(f'{sum} conversions finished.')
+        if args.verbose:
+            print(f'{sum} conversions finished.')

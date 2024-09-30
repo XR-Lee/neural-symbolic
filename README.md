@@ -8,7 +8,7 @@
 <sup>3</sup>Institute for Interdisciplinary Information Sciences (IIIS), Tsinghua University <br>
 <sub>(* indicates equal contribution)</sub>
 
-**ICRA 2025**
+<!-- > **ICRA 2025** -->
 
 <a href="https://arxiv.org/abs/2401.06614"><img src='https://img.shields.io/badge/arXiv-M2V-firebrick?logo=arxiv' alt='Arxiv'></a>
 <a href="https://arxiv.org/pdf/2401.06614.pdf"><img src='https://img.shields.io/badge/PDF-M2V-orange?logo=googledocs&logoColor=white' alt='PDF'></a>
@@ -16,7 +16,9 @@
 <a href='https://www.youtube.com/watch?v=VXI3y2o0SqY&ab_channel=MatthiasNiessner'><img src='https://img.shields.io/badge/Video-M2V-red?logo=youtube' alt='Youtube Video'></a>
 </div>
 
-[\[Arxiv\]](https://arxiv.org/abs/2401.06614) [\[Paper\]](https://arxiv.org/pdf/2401.06614.pdf) [\[Project Page\]](https://vveicao.github.io/projects/Motion2VecSets/) [\[Video\]](https://www.youtube.com/watch?v=VXI3y2o0SqY&ab_channel=MatthiasNiessner) 
+<!-- >
+[\[Arxiv\]](https://arxiv.org/abs/2401.06614) [\[Paper\]](https://arxiv.org/pdf/2401.06614.pdf) [\[Project Page\]](https://vveicao.github.io/projects/Motion2VecSets/) [\[Video\]](https://www.youtube.com/watch?v=VXI3y2o0SqY&ab_channel=MatthiasNiessner)
+-->
 
 ![teaser](./assets/teaser.png)
 

@@ -38,7 +38,6 @@ https://github.com/user-attachments/assets/dddde21a-5ce3-4324-8fef-e3eb531a40d0
 
 <!-- > above is new demo video. demo scene token: cc8c0bf57f984915a77078b10eb33198 -->
 
-![video](https://github.com/user-attachments/assets/dddde21a-5ce3-4324-8fef-e3eb531a40d0)
 
 ## Data preparation
 

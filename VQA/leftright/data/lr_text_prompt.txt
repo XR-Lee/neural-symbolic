@@ -1,0 +1,7 @@
+system_context = '''
+In the provided bird's-eye view (BEV), the red lines in the photos are lane boundaries that are only for references. Color blocks highlighted are different segments of lanes. 
+The colors of the blocks come from green and blue.
+'''
+prompt = '''
+You are an expert in determining positional relationships of lane segments in the image. Is the green segment on the left of the blue segment, or on the right? Please reply in a brief sentence.
+'''

@@ -10,14 +10,7 @@
 
 <!-- > **ICRA 2025** -->
 
-<!-- >
-<a href="https://arxiv.org/abs/2401.06614"><img src='https://img.shields.io/badge/arXiv-M2V-firebrick?logo=arxiv' alt='Arxiv'></a>
-<a href="https://arxiv.org/pdf/2401.06614.pdf"><img src='https://img.shields.io/badge/PDF-M2V-orange?logo=googledocs&logoColor=white' alt='PDF'></a>
--->
 <a href='https://github.com/user-attachments/assets/dddde21a-5ce3-4324-8fef-e3eb531a40d0'><img src='https://img.shields.io/badge/Video-M2V-red?logo=youtube' alt='Youtube Video'></a>
-<!-- >
-<a href='https://vveicao.github.io/projects/Motion2VecSets/'><img src='https://img.shields.io/badge/Project_Page-M2V-green?logo=googlechrome&logoColor=white' alt='Project Page'></a>
--->
 
 </div>
 

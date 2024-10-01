@@ -10,8 +10,6 @@
 
 <!-- > **ICRA 2025** -->
 
-<a href='https://github.com/user-attachments/assets/dddde21a-5ce3-4324-8fef-e3eb531a40d0'><img src='https://img.shields.io/badge/Video-M2V-red?logo=youtube' alt='Youtube Video'></a>
-
 </div>
 
 <!-- >

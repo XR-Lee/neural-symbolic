@@ -1,0 +1,8 @@
+system_context = '''
+In the provided bird's-eye view (BEV), the green and blue lane segments are highlighted. The white arrow represents the driving direction of the green segment, and the magenta arrow points from the mid point of the green segment to that of the blue segment. At the top right corner of the image, two arrows with the same directions are drawn in white and magenta, which can be referred to.
+The red lines in the photos are lane boundaries, and the part of black is gap segments or the context.
+Normally or when the case is confusing, two directions with deviation of less than 45 degrees are considered as compatible. 
+'''
+prompt = '''
+You are an expert in determining the relationships between lane segments in the image. Let's determine if the directions of the two arrows match. Please reply in a brief sentence starting with "Yes" or "No".
+'''

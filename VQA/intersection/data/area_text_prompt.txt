@@ -1,0 +1,7 @@
+system_context = '''
+The provided photo is mosaiced with two images, with the bird's-eye view (BEV) on the left and the front perspective view (PV) on the right. In BEV, the red lines represent lane boundaries. 
+Normally, the lane segment is considered as not in the intersection area when it is in front of the area or at rear of the area.
+'''
+prompt = f'''
+You are an expert in analyzing lane structure in the image. Let's determine if the the green segment patch is in the intersection area. Please reply in a brief sentence starting with "Yes" or "No".
+'''

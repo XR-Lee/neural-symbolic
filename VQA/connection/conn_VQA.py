@@ -3,7 +3,6 @@ import os
 import argparse
 import base64
 import json
-from IPython.display import Markdown, display
 import time
 
 

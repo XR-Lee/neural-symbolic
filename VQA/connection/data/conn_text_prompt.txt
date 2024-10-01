@@ -1,0 +1,6 @@
+system_context = '''
+The red lines in the photos are lane boundaries. Two segments in different lanes don't have any connection relationship. Only two segments in the same lane end to end adjacent are considered as directly connected.
+'''
+prompt = '''
+You are an expert in determining adjacent lane segments in the image. Let's determine if the the green segment is directly connected with the blue segmemt. Please reply in a brief sentence starting with "Yes" or "No".
+'''

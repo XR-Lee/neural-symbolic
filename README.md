@@ -10,15 +10,6 @@
 
 <!-- > **ICRA 2025** -->
 
-<!-- >
-<a href="https://arxiv.org/abs/2401.06614"><img src='https://img.shields.io/badge/arXiv-M2V-firebrick?logo=arxiv' alt='Arxiv'></a>
--->
-<a href="https://arxiv.org/pdf/2401.06614.pdf"><img src='https://img.shields.io/badge/PDF-M2V-orange?logo=googledocs&logoColor=white' alt='PDF'></a>
-<a href='https://github.com/user-attachments/assets/dddde21a-5ce3-4324-8fef-e3eb531a40d0'><img src='https://img.shields.io/badge/Video-M2V-red?logo=youtube' alt='Youtube Video'></a>
-<!-- >
-<a href='https://vveicao.github.io/projects/Motion2VecSets/'><img src='https://img.shields.io/badge/Project_Page-M2V-green?logo=googlechrome&logoColor=white' alt='Project Page'></a>
--->
-
 </div>
 
 <!-- >
@@ -34,7 +25,7 @@
 ![mainimage](./assets/main_pic.png)
 
 <p>
- Existing approaches have notable limitations: (1) Dense visual prompting with VLMs can achieve strong performance but is costly in terms of both financial resources and carbon footprint, making it impractical for robotics applications. (2) Neuro-symbolic reasoning methods for 3D scene understanding fail to integrate visual inputs when synthesizing programs, making them ineffective in handling complex corner cases. To this end, we propose a fast-slow neuro-symbolic lane topology extraction algorithm, named Chameleon, which alternates between a fast system that directly reasons over detected instances using synthesized programs and a slow system that utilizes a VLM with a chain-of-thought design to handle corner cases. Chameleon leverages the strengths of both approaches, providing an affordable solution while maintaining high performance. We evaluate the method on the OpenLane-V2 dataset, showing consistent improvements across various baseline detectors.
+ We propose a fast-slow neuro-symbolic lane topology extraction algorithm, named Chameleon, which alternates between a fast system that directly reasons over detected instances using synthesized programs and a slow system that utilizes a VLM with a chain-of-thought design to handle corner cases. Chameleon leverages the strengths of both approaches, providing an affordable solution while maintaining high performance. We evaluate the method on the OpenLane-V2 dataset, showing consistent improvements across various baseline detectors.
 </p>
 
 <!-- > https://github.com/OpenDriveLab/DriveLM/assets/103363891/67495435-4a32-4614-8d83-71b5c8b66443 -->

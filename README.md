@@ -59,9 +59,6 @@ python ./VQA/connection/data/pairwise_conn_BEV.py --output $GENERATION_PATH --ve
 ```
 
 Through the command, you can obtain visual prompts like as follows:
-<center>
-    <img src="./assets/data_example.png" alt="dataexample" width="25%">
-</center>
 <div style="text-align: center;">
     <img src="./assets/data_example.png" alt="dataexample" width="25%" height="auto">
 </div>

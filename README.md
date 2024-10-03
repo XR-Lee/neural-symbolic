@@ -58,6 +58,12 @@ Then you can generate the corresponding visual prompt data for different VQA sub
 python ./VQA/connection/data/pairwise_conn_BEV.py --output $GENERATION_PATH --verbose
 ```
 
+Through the command, you can obtain visual prompts like as follows:
+<div style="text-align: center;">
+    <img src="./assets/data_example.png" alt="dataexample" width="25%" height="auto">
+</div>
+
+
 On top of that, you should make your text prompts for the VQA task and save it as a `txt` file. For instance:
 
 ```python

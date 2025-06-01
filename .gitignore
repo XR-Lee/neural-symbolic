@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+.env
+execution_logs/
+
 *.pkl
 *.7z
 *.ipynb

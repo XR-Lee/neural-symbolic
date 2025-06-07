@@ -52,3 +52,18 @@ https://github.com/user-attachments/assets/dddde21a-5ce3-4324-8fef-e3eb531a40d0
 - [ ] ...
 
 
+## Citation
+If you find this project useful, feel free to cite our work!
+<div style="display:flex;">
+<div>
+
+```bibtex
+@article{zhang2025chameleon,
+  title={Chameleon: Fast-slow Neuro-symbolic Lane Topology Extraction},
+  author={Zhang, Zongzheng and Li, Xinrun and Zou, Sizhe and Chi, Guoxuan and Li, Siqi and Qiu, Xuchong and Wang, Guoliang and Zheng, Guantian and Wang, Leichen and Zhao, Hang and others},
+  journal={arXiv preprint arXiv:2503.07485},
+  year={2025}
+}
+```
+
+

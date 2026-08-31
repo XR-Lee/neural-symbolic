@@ -1,3 +1,5 @@
+
+
 <div align="center">
 <h2>🦎Chameleon: Fast-slow Neuro-symbolic Lane Topology Extraction</h2>
 
@@ -62,10 +64,8 @@ If you find this project useful, feel free to cite our work!
 ```bibtex
 @article{zhang2025chameleon,
   title={Chameleon: Fast-slow Neuro-symbolic Lane Topology Extraction},
-  author={Zhang, Zongzheng and Li, Xinrun and Zou, Sizhe and Chi, Guoxuan and Li, Siqi and Qiu, Xuchong and Wang, Guoliang and Zheng, Guantian and Wang, Leichen and Zhao, Hang and others},
+  author={Zhang, Zongzheng and Li, Xinrun and Zou, Sizhe and Chi, Guoxuan and Li, Siqi and Qiu, Xuchong and Wang, Guoliang and Zheng, Guantian and Wang, Leichen and Zhao, Hang and Zhao, Hao},
   journal={arXiv preprint arXiv:2503.07485},
   year={2025}
 }
 ```
-
-
